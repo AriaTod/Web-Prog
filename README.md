@@ -1,2 +1,53 @@
-# Web-Prog
-Выполнение дз и лабораторных работ по курсу
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Решение СЛАУ</title>
+</head>
+<body>
+  <h4>aria_tod</h4>
+
+  <!-- Коэффициенты -->
+  <input id="n1" placeholder="a1">
+  <input id="n2" placeholder="b1">
+  <input id="n3" placeholder="c1">
+  <br><br>
+  <input id="n4" placeholder="a2">
+  <input id="n5" placeholder="b2">
+  <input id="n6" placeholder="c2">
+  <br><br>
+
+  <!-- Кнопка -->
+  <button id="bt">Вычислить</button>
+  <br><br>
+
+  <!-- Результаты -->
+  x: <input id="result1" readonly>
+  y: <input id="result2" readonly>
+
+  <script>
+    document.getElementById('bt').onclick = function () {
+      // считываем значения
+      let a1 = parseFloat(document.getElementById('n1').value);
+      let b1 = parseFloat(document.getElementById('n2').value);
+      let c1 = parseFloat(document.getElementById('n3').value);
+      let a2 = parseFloat(document.getElementById('n4').value);
+      let b2 = parseFloat(document.getElementById('n5').value);
+      let c2 = parseFloat(document.getElementById('n6').value);
+
+      // определители
+      let D  = a1 * b2 - a2 * b1;
+      let Dx = c1 * b2 - c2 * b1;
+      let Dy = a1 * c2 - a2 * c1;
+
+      if (D !== 0) {
+        document.getElementById('result1').value = Dx / D;
+        document.getElementById('result2').value = Dy / D;
+      } else {
+        document.getElementById('result1').value = 'нет решения';
+        document.getElementById('result2').value = 'нет решения';
+      }
+    }
+  </script>
+</body>
+</html>
