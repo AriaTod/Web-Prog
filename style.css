@@ -127,6 +127,13 @@ main {
   background-color: #1e7e34;
 }
 
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
 /* Форма заказа */
 #checkout form {
   display: flex;
