@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartItemsContainer = document.querySelector(".cart-items");
   const totalElement = document.querySelector(".cart-summary span");
   const addToCartButtons = document.querySelectorAll(".product button");
+  const checkoutSection = document.getElementById("checkout");
+  const checkoutButton = document.querySelector("#cart .cart-summary button");
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -92,4 +94,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     totalElement.textContent = `${total} рублей`;
   }
+
+    // "Оформить заказ" в корзине → показывает форму
+  checkoutButton.addEventListener("click", () => {
+    checkoutSection.hidden = false;
+    checkoutSection.scrollIntoView({ behavior: "smooth" });
+  });
 });

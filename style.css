@@ -200,6 +200,18 @@ main {
   background-color: #e68900;
 }
 
+#checkout {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f9f9f9;
+}
+
+[hidden] {
+  display: none !important;
+}
+
 /* Подвал */
 footer {
   background-color: #222;
