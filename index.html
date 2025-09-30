@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Интернет-магазин доставки грузов</title>
+</head>
+<body>
+
+<!-------------------------------------------------------- ШАПКА -------------------------------------------------------------------->
+  <header>
+    <h1>Магазин доставки грузов и посылок</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Каталог</a></li>
+        <li><a href="#">Корзина</a></li>
+        <li><a href="#">Оформить заказ</a></li>
+      </ul>
+    </nav>
+  </header>
+
+<!---------------------------------------------------------ОСНОВНОЙ КОНТЕНТ ---------------------------------------------------->
+  <main>
+
+<!-- ----------------------------------------------------- КАТАЛОГ ------------------------------------------------------------------->
+    <section id="catalog">
+      <h2>Каталог товаров</h2>
+      <div class="product-list">
+        <article class="product">
+          <h3 class="product-title">Товар 1</h3>
+          <p class="product-price">Цена: 100 рублей</p>
+          <button>Добавить в корзину</button>
+        </article>
+
+        <article class="product">
+          <h3 class="product-title">Товар 2</h3>
+          <p class="product-price">Цена: 200 рублей</p>
+          <button>Добавить в корзину</button>
+        </article>
+
+        <article class="product">
+          <h3 class="product-title">Товар 3</h3>
+          <p class="product-price">Цена: 300 рублей</p>
+          <button>Добавить в корзину</button>
+        </article>
+      </div>
+    </section>
+
+<!---------------------------------------------------------- КОРЗИНА ------------------------------------------------------------------->
+    <section id="cart">
+      <h2>Ваша корзина</h2>
+      <div class="cart-items">
+        <p>Корзина пуста</p>
+      </div>
+      <div class="cart-summary">
+        <p>Итого: <span>0 рублей</span></p>
+        <button>Оформить заказ</button>
+      </div>
+    </section>
+
+<!--------------------------------------------------------- ФОРМА ЗАКАЗА --------------------------------------------------------------->
+    <section id="checkout">
+      <h2>Оформление заказа</h2>
+      <form>
+        <label>
+          Имя:
+          <input type="text" name="firstName" required>
+        </label>
+        <label>
+          Фамилия:
+          <input type="text" name="lastName" required>
+        </label>
+        <label>
+          Адрес доставки:
+          <input type="text" name="address" required>
+        </label>
+        <label>
+          Телефон:
+          <input type="tel" name="phone" required>
+        </label>
+        <button type="submit">Создать заказ</button>
+      </form>
+    </section>
+
+  </main>
+
+<!--------------------------------------------------------- ПОДВАЛ ------------------------------------------------------------------------>
+  <footer>
+    <p>© 2025 Магазин доставки грузов</p>
+  </footer>
+
+</body>
+</html>
