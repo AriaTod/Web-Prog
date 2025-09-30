@@ -134,6 +134,39 @@ main {
   border-bottom: 1px solid #ddd;
 }
 
+/* Добавление стилей на кнопки в корзине */
+.cart-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.cart-controls button {
+  padding: 2px 6px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.cart-controls button:hover {
+  opacity: 0.8;
+}
+
+.cart-controls .increase {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.cart-controls .decrease {
+  background-color: #FF9800;
+  color: white;
+}
+
+.cart-controls .remove {
+  background-color: #f44336;
+  color: white;
+}
+
 /* Форма заказа */
 #checkout form {
   display: flex;
