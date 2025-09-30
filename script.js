@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const addToCartButtons = document.querySelectorAll(".product button");
   const checkoutSection = document.getElementById("checkout");
   const checkoutButton = document.querySelector("#cart .cart-summary button");
+  const checkoutForm = document.getElementById("checkout-form");
+  const orderMessage = document.getElementById("order-message");
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -95,9 +97,29 @@ document.addEventListener("DOMContentLoaded", () => {
     totalElement.textContent = `${total} рублей`;
   }
 
+    // ---------- РАБОТА С ФОРМОЙ ----------
     // "Оформить заказ" в корзине → показывает форму
-  checkoutButton.addEventListener("click", () => {
+    checkoutButton.addEventListener("click", () => {
     checkoutSection.hidden = false;
     checkoutSection.scrollIntoView({ behavior: "smooth" });
+  });
+
+    // Показ формы
+    checkoutButton.addEventListener("click", () => {
+    checkoutSection.hidden = false;
+    checkoutSection.scrollIntoView({ behavior: "smooth" });
+  });
+
+    // Отправка формы
+    checkoutForm.addEventListener("submit", (event) => {
+    event.preventDefault(); // отключаем перезагрузку страницы
+
+    // Скрыть форму, показать сообщение
+    checkoutForm.hidden = true;
+    orderMessage.hidden = false;
+
+    // Очистить корзину
+    cart = [];
+    updateCart();
   });
 });
