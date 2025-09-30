@@ -6,8 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkoutButton = document.querySelector("#cart .cart-summary button");
   const checkoutForm = document.getElementById("checkout-form");
   const orderMessage = document.getElementById("order-message");
-
-  // <<< ДОБАВЛЕНО >>> Встроенное сообщение о пустой корзине
   const emptyCartMessage = document.getElementById("empty-cart-message");
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -31,17 +29,17 @@ document.addEventListener("DOMContentLoaded", () => {
       saveCart();
       updateCart();
 
-      // <<< ДОБАВЛЕНО >>> Скрываем сообщение о пустой корзине после добавления товара
+      //Сообщение о пустой корзине после добавления товара
       emptyCartMessage.style.display = "none";
     });
   });
 
-  // ---------- СОХРАНЕНИЕ КОРЗИНЫ ----------
+  // ----------------------------------------------------- СОХРАНЕНИЕ КОРЗИНЫ ----------------------------------------------------------
   function saveCart() {
     localStorage.setItem("cart", JSON.stringify(cart));
   }
 
-  // ---------- ОБНОВЛЕНИЕ КОРЗИНЫ ----------
+  // ----------------------------------------------------- ОБНОВЛЕНИЕ КОРЗИНЫ ----------------------------------------------------------
   function updateCart() {
     cartItemsContainer.innerHTML = "";
 
@@ -103,28 +101,28 @@ document.addEventListener("DOMContentLoaded", () => {
     totalElement.textContent = `${total} рублей`;
   }
 
-  // ---------- РАБОТА С ФОРМОЙ ----------
+  // ---------------------------------------------------- РАБОТА С ФОРМОЙ -------------------------------------------------------------
   // Обработчик кнопки "Оформить заказ"
   checkoutButton.addEventListener("click", () => {
     if (cart.length === 0) {
-      // Корзина пуста → показываем сообщение
+      // Корзина пуста ->  показываем сообщение
       emptyCartMessage.style.display = "block";
       checkoutSection.hidden = true; // форма точно не открывается
       return;
     }
 
-    // Если товары есть → скрываем сообщение и открываем форму
+    // Если товары есть -> скрываем сообщение и открываем форму
     emptyCartMessage.style.display = "none";
     checkoutSection.hidden = false;
     checkoutSection.scrollIntoView({ behavior: "smooth" });
   });
 
-  // ---------- ОТПРАВКА ФОРМЫ ----------
+  // --------------------------------------------------- ОТПРАВКА ФОРМЫ ----------------------------------------------------------------
   checkoutForm.addEventListener("submit", (event) => {
     event.preventDefault(); // отключаем перезагрузку страницы
 
-    // <<< ИЗМЕНЕНО >>> Форма остаётся на экране, сообщение о заказе показывается
-    checkoutForm.hidden = false; // форма остаётся видимой
+    // Форма остаётся на экране, сообщение о заказе показывается
+    checkoutForm.hidden = false;
     orderMessage.hidden = false;
 
     // Очистить корзину
