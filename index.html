@@ -13,9 +13,9 @@
     <h1>Магазин доставки грузов и посылок</h1>
     <nav>
       <ul>
-        <li><a href="#">Каталог</a></li>
-        <li><a href="#">Корзина</a></li>
-        <li><a href="#">Оформить заказ</a></li>
+        <li><a href="#catalog">Каталог</a></li>
+        <li><a href="#cart">Корзина</a></li>
+        <li><a href="#cart">Оформить заказ</a></li>
       </ul>
     </nav>
   </header>
@@ -31,42 +31,42 @@
     <article class="product">
       <img src="pictures/orig-barbie-crocs.jpg" alt="Crocs Barbie">
       <h3 class="product-title">Crocs Barbie</h3>
-      <p class="product-price">Цена: 100 рублей</p>
+      <p class="product-price">Цена: 36 055 рублей</p>
       <button>Добавить в корзину</button>
     </article>
 
     <article class="product">
       <img src="pictures/bag_michael_kors.jpg" alt="Сумка Michael Kors">
       <h3 class="product-title">Сумка Michael Kors</h3>
-      <p class="product-price">Цена: 200 рублей</p>
+      <p class="product-price">Цена: 47 100 рублей</p>
       <button>Добавить в корзину</button>
     </article>
 
     <article class="product">
       <img src="pictures/huawei_watch_fit_4.jpg" alt="Часы Huawei Watch Fit 4">
       <h3 class="product-title">Huawei Watch Fit 4</h3>
-      <p class="product-price">Цена: 300 рублей</p>
+      <p class="product-price">Цена: 19 999 рублей</p>
       <button>Добавить в корзину</button>
     </article>
 
     <article class="product">
       <img src="pictures/new_balance_9060.jpg" alt="Кроссовки New Balance 9060">
       <h3 class="product-title">New Balance 9060</h3>
-      <p class="product-price">Цена: 400 рублей</p>
+      <p class="product-price">Цена: 7040 рублей</p>
       <button>Добавить в корзину</button>
     </article>
 
     <article class="product">
       <img src="pictures/set_of_pans.jpg" alt="Набор кастрюль">
       <h3 class="product-title">Набор кастрюль</h3>
-      <p class="product-price">Цена: 500 рублей</p>
+      <p class="product-price">Цена: 1290 рублей</p>
       <button>Добавить в корзину</button>
     </article>
 
     <article class="product">
       <img src="pictures/escentric_molecules_molecule_02.jpg" alt="Парфюм Molecule 02">
       <h3 class="product-title">Molecule 02</h3>
-      <p class="product-price">Цена: 600 рублей</p>
+      <p class="product-price">Цена: 24 272 рублей</p>
       <button>Добавить в корзину</button>
     </article>
 
@@ -82,6 +82,11 @@
       <div class="cart-summary">
         <p>Итого: <span>0 рублей</span></p>
         <button>Оформить заказ</button>
+
+        <!-- Встроенное уведомление -->
+        <p id="empty-cart-message" style="color: red; font-weight: bold; margin-top: 0.5rem; display: none;">
+        Корзина пуста! Сначала добавьте товары.
+        </p>
       </div>
     </section>
 

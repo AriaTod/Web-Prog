@@ -6,6 +6,13 @@ body {
   line-height: 1.5;
   color: #333;
   background-color: #fafafa;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 /* Шапка */
@@ -42,6 +49,7 @@ nav a:hover {
 
 /* Основной контент */
 main {
+  flex: 1;
   padding: 2rem;
 }
 
@@ -218,7 +226,7 @@ footer {
   color: #fff;
   text-align: center;
   padding: 1rem;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */ 
 }
 
 /* Адаптивность */
