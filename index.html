@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Задание — 1000 DIV</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+</head>
+<body>
+  <!-- ARTICLE — самый первый потомок body -->
+  <article id="container" aria-label="container"></article>
+
+  <!-- H4 с логином в Moodle -->
+  <h4>aria_tod</h4>
+
+  <!-- Кнопка, по которой создаются div'ы -->
+  <button id="bt" type="button">Создать 1000 DIV</button>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('bt');
+      var container = document.getElementById('container');
+
+      btn.addEventListener('click', function handler() {
+        btn.removeEventListener('click', handler);
+
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < 1000; i++) {
+          var d = document.createElement('div');
+          d.id = 'i' + i;
+          d.textContent = d.id;
+          frag.appendChild(d);
+        }
+        container.appendChild(frag);
+      }, { once: true });
+    })();
+  </script>
+</body>
+</html>
