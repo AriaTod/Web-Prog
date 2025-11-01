@@ -98,6 +98,7 @@ console.log("Структура страницы успешно создана!"
 // ====================
 
 let tasks = [];
+let draggedTaskId = null; // id перетаскиваемой задачи
 
 // Генерация уникального ID
 function generateId() {
@@ -118,7 +119,7 @@ function loadTasks() {
     try {
       const parsed = JSON.parse(saved);
       tasks = parsed.map(task => ({
-        id: task.id || generateId(),  // гарантируем id
+        id: task.id || generateId(),
         title: task.title || "",
         date: task.date || null,
         completed: !!task.completed
@@ -136,10 +137,12 @@ function loadTasks() {
 
 function renderTasks(displayTasks = tasks) {
   taskList.innerHTML = "";
+  draggedTaskId = null; // сброс при перерисовке
 
   displayTasks.forEach(task => {
     const li = document.createElement("li");
     li.className = "task-item";
+    li.draggable = true;
     if (task.completed) li.classList.add("completed");
 
     const textSpan = document.createElement("span");
@@ -157,7 +160,7 @@ function renderTasks(displayTasks = tasks) {
     deleteBtn.addEventListener("click", () => {
       tasks = tasks.filter(t => t.id !== task.id);
       saveTasks();
-      renderTasks(); // сохранение текущего фильтра/поиска
+      renderTasks();
     });
 
     // Кнопка редактирования
@@ -185,6 +188,48 @@ function renderTasks(displayTasks = tasks) {
       task.completed = !task.completed;
       saveTasks();
       renderTasks();
+    });
+
+    // ====================
+    // DRAG-AND-DROP
+    // ====================
+    li.addEventListener("dragstart", (e) => {
+      draggedTaskId = task.id;
+      li.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+    });
+
+    li.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      li.classList.add("drag-over");
+    });
+
+    li.addEventListener("dragleave", () => {
+      li.classList.remove("drag-over");
+    });
+
+    li.addEventListener("drop", (e) => {
+      e.preventDefault();
+      li.classList.remove("drag-over");
+
+      if (!draggedTaskId || draggedTaskId === task.id) return;
+
+      const draggedTask = tasks.find(t => t.id === draggedTaskId);
+      const targetIndex = tasks.findIndex(t => t.id === task.id);
+
+      // Удаляем из старого места
+      tasks = tasks.filter(t => t.id !== draggedTaskId);
+      // Вставляем в новое
+      tasks.splice(targetIndex, 0, draggedTask);
+
+      saveTasks();
+      renderTasks();
+    });
+
+    li.addEventListener("dragend", () => {
+      li.classList.remove("dragging");
+      document.querySelectorAll(".drag-over").forEach(el => el.classList.remove("drag-over"));
     });
 
     li.append(textSpan, dateSpan, editBtn, deleteBtn, toggleBtn);
@@ -258,6 +303,6 @@ console.log("Фильтрация, сортировка и поиск подкл
 // ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
 // ====================
 
-loadTasks();     // Загрузка из localStorage
-renderTasks();   // Отображение
-console.log("Приложение полностью готово к работе! Задачи загружены из localStorage.");
+loadTasks(); // загрузка из LocalStorage
+renderTasks(); // отображение
+console.log("Приложение полностью готово к работе! Drag & Drop включён!");
