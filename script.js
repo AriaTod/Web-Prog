@@ -105,3 +105,106 @@ app.appendChild(footer);
 
 // Проверка
 console.log("Структура страницы успешно создана!");
+
+// ====================
+// ЛОГИКА ДОБАВЛЕНИЯ И УПРАВЛЕНИЯ ЗАДАЧАМИ
+// ====================
+
+// Массив для хранения задач (пока в памяти)
+let tasks = [];
+
+// Функция отрисовки задач на странице
+function renderTasks() {
+  // Очищаем текущий список
+  taskList.innerHTML = "";
+
+  // Перебираем все задачи и создаём элементы
+  tasks.forEach((task, index) => {
+    const li = document.createElement("li");
+    li.className = "task-item";
+    if (task.completed) li.classList.add("completed");
+
+    // Текст задачи
+    const textSpan = document.createElement("span");
+    textSpan.textContent = task.title;
+    textSpan.className = "task-title";
+
+    // Дата задачи
+    const dateSpan = document.createElement("span");
+    dateSpan.textContent = task.date || "Без даты";
+    dateSpan.className = "task-date-display";
+
+    // Кнопка "удалить"
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Удалить";
+    deleteBtn.className = "delete-btn";
+    deleteBtn.addEventListener("click", () => {
+      tasks.splice(index, 1); // удаляем из массива
+      renderTasks(); // перерисовываем список
+    });
+
+    // Кнопка "редактировать"
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Редактировать";
+    editBtn.className = "edit-btn";
+    editBtn.addEventListener("click", () => {
+      const newTitle = prompt("Редактировать задачу:", task.title);
+      if (newTitle !== null && newTitle.trim() !== "") {
+        task.title = newTitle.trim();
+      }
+      const newDate = prompt("Редактировать дату (YYYY-MM-DD):", task.date || "");
+      if (newDate !== null) {
+        task.date = newDate;
+      }
+      renderTasks();
+    });
+
+    // Кнопка "выполнено/не выполнено"
+    const toggleBtn = document.createElement("button");
+    toggleBtn.textContent = task.completed ? "Снять отметку" : "Выполнено";
+    toggleBtn.className = "toggle-btn";
+    toggleBtn.addEventListener("click", () => {
+      task.completed = !task.completed;
+      renderTasks();
+    });
+
+    // Собираем элементы в li
+    li.append(textSpan, dateSpan, editBtn, deleteBtn, toggleBtn);
+    taskList.appendChild(li);
+  });
+}
+
+// ====================
+// СОБЫТИЕ ДОБАВЛЕНИЯ ЗАДАЧИ
+// ====================
+form.addEventListener("submit", (e) => {
+  e.preventDefault(); // предотвращаем перезагрузку страницы
+  const title = inputTitle.value.trim();
+  const date = inputDate.value;
+
+  if (title === "") {
+    alert("Пожалуйста, введите название задачи!");
+    return;
+  }
+
+  // Добавляем задачу в массив
+  tasks.push({
+    title: title,
+    date: date || null,
+    completed: false
+  });
+
+  // Очищаем поля формы
+  inputTitle.value = "";
+  inputDate.value = "";
+
+  // Перерисовываем список
+  renderTasks();
+});
+
+// ====================
+// ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
+// ====================
+renderTasks(); // Отображаем пустой список при загрузке
+console.log("Логика добавления, удаления, редактирования и отметки задач подключена!");
+console.log("Приложение полностью готово к работе!");
