@@ -34,7 +34,6 @@ inputTitle.placeholder = "Введите задачу...";
 inputTitle.className = "task-input";
 inputTitle.required = true;
 
-// Исправлено: класс для inputDate
 const inputDate = document.createElement("input");
 inputDate.type = "date";
 inputDate.className = "task-date";
@@ -100,13 +99,45 @@ console.log("Структура страницы успешно создана!"
 
 let tasks = [];
 
-// Универсальная функция рендера
+// Генерация уникального ID
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+// ====================
+// LOCALSTORAGE
+// ====================
+
+function saveTasks() {
+  localStorage.setItem("todoTasks", JSON.stringify(tasks));
+}
+
+function loadTasks() {
+  const saved = localStorage.getItem("todoTasks");
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      tasks = parsed.map(task => ({
+        id: task.id || generateId(),  // гарантируем id
+        title: task.title || "",
+        date: task.date || null,
+        completed: !!task.completed
+      }));
+    } catch (e) {
+      console.error("Ошибка загрузки задач из localStorage:", e);
+      tasks = [];
+    }
+  }
+}
+
+// ====================
+// УНИВЕРСАЛЬНАЯ ФУНКЦИЯ РЕНДЕРА
+// ====================
+
 function renderTasks(displayTasks = tasks) {
   taskList.innerHTML = "";
 
-  displayTasks.forEach((task, indexInDisplay) => {
-    const originalIndex = tasks.indexOf(task);
-
+  displayTasks.forEach(task => {
     const li = document.createElement("li");
     li.className = "task-item";
     if (task.completed) li.classList.add("completed");
@@ -115,7 +146,6 @@ function renderTasks(displayTasks = tasks) {
     textSpan.textContent = task.title;
     textSpan.className = "task-title";
 
-    // Исправлено: dateSpan.textContent
     const dateSpan = document.createElement("span");
     dateSpan.textContent = task.date || "Без даты";
     dateSpan.className = "task-date-display";
@@ -125,8 +155,9 @@ function renderTasks(displayTasks = tasks) {
     deleteBtn.textContent = "Удалить";
     deleteBtn.className = "delete-btn";
     deleteBtn.addEventListener("click", () => {
-      tasks.splice(originalIndex, 1);
-      renderTasks(); // Перерендер с учётом текущего фильтра
+      tasks = tasks.filter(t => t.id !== task.id);
+      saveTasks();
+      renderTasks(); // сохранение текущего фильтра/поиска
     });
 
     // Кнопка редактирования
@@ -140,8 +171,9 @@ function renderTasks(displayTasks = tasks) {
       }
       const newDate = prompt("Редактировать дату (YYYY-MM-DD):", task.date || "");
       if (newDate !== null) {
-        task.date = newDate.trim(); // + добавлен trim()
+        task.date = newDate.trim() || null;
       }
+      saveTasks();
       renderTasks();
     });
 
@@ -151,6 +183,7 @@ function renderTasks(displayTasks = tasks) {
     toggleBtn.className = "toggle-btn";
     toggleBtn.addEventListener("click", () => {
       task.completed = !task.completed;
+      saveTasks();
       renderTasks();
     });
 
@@ -162,6 +195,7 @@ function renderTasks(displayTasks = tasks) {
 // ====================
 // СОБЫТИЕ ДОБАВЛЕНИЯ ЗАДАЧИ
 // ====================
+
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const title = inputTitle.value.trim();
@@ -173,6 +207,7 @@ form.addEventListener("submit", (e) => {
   }
 
   tasks.push({
+    id: generateId(),
     title,
     date: date || null,
     completed: false
@@ -180,6 +215,8 @@ form.addEventListener("submit", (e) => {
 
   inputTitle.value = "";
   inputDate.value = "";
+
+  saveTasks();
   renderTasks();
 });
 
@@ -196,6 +233,7 @@ filterSelect.addEventListener("change", () => {
   } else if (filter === "Невыполненные") {
     filtered = filtered.filter(t => !t.completed);
   }
+
   renderTasks(filtered);
 });
 
@@ -219,5 +257,7 @@ console.log("Фильтрация, сортировка и поиск подкл
 // ====================
 // ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
 // ====================
-renderTasks();
-console.log("Приложение полностью готово к работе!");
+
+loadTasks();     // Загрузка из localStorage
+renderTasks();   // Отображение
+console.log("Приложение полностью готово к работе! Задачи загружены из localStorage.");
