@@ -1,0 +1,189 @@
+/* ====== СБРОС БРАУЗЕРНЫХ СТИЛЕЙ ====== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* ====== ОСНОВНОЙ КОНТЕЙНЕР ====== */
+body {
+  background: linear-gradient(135deg, #f0f4ff, #e9f7ff);
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+}
+
+/* ====== ОСНОВНАЯ КАРТОЧКА ====== */
+.app-container {
+  background: white;
+  width: 100%;
+  max-width: 700px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* ====== ХЕДЕР ====== */
+header {
+  background: #4f6ef7;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  letter-spacing: 0.5px;
+}
+
+/* ====== ОСНОВНОЙ КОНТЕНТ ====== */
+.main-content {
+  padding: 20px;
+}
+
+/* ====== ФОРМА ДОБАВЛЕНИЯ ====== */
+.form-section {
+  margin-bottom: 20px;
+}
+
+.task-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.task-input,
+.task-date {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.add-btn {
+  background: #4f6ef7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-btn:hover {
+  background: #3954c6;
+}
+
+/* ====== ПАНЕЛЬ УПРАВЛЕНИЯ ====== */
+.control-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-select,
+.search-input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.sort-btn {
+  background: #00a878;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sort-btn:hover {
+  background: #008b63;
+}
+
+/* ====== СПИСОК ЗАДАЧ ====== */
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8faff;
+  border: 1px solid #dbe4ff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  transition: 0.2s;
+}
+
+.task-item:hover {
+  background: #eef3ff;
+}
+
+/* ВЫПОЛНЕННЫЕ */
+.task-item.completed {
+  opacity: 0.7;
+  text-decoration: line-through;
+}
+
+/* КНОПКИ В ЗАДАЧАХ */
+.task-item button {
+  margin-left: 6px;
+  background: #4f6ef7;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.task-item button:hover {
+  background: #3954c6;
+}
+
+.delete-btn {
+  background: #e74c3c;
+}
+
+.delete-btn:hover {
+  background: #c0392b;
+}
+
+.toggle-btn {
+  background: #00a878;
+}
+
+.toggle-btn:hover {
+  background: #008b63;
+}
+
+/* ====== DRAG-AND-DROP ====== */
+.task-item.dragging {
+  opacity: 0.4;
+}
+
+.task-item.drag-over {
+  border: 2px dashed #4f6ef7;
+  background: #eef3ff;
+}
+
+/* ====== ФУТЕР ====== */
+footer {
+  text-align: center;
+  padding: 12px;
+  font-size: 0.9rem;
+  color: #777;
+  border-top: 1px solid #eee;
+}
