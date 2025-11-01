@@ -31,8 +31,10 @@ inputTitle.placeholder = "Введите задачу...";
 inputTitle.className = "task-input";
 inputTitle.required = true;
 
+// Заменяем input type="date" на type="text"
 const inputDate = document.createElement("input");
-inputDate.type = "date";
+inputDate.type = "text";
+inputDate.placeholder = "ДД.ММ.ГГГГ";
 inputDate.className = "task-date";
 
 const addButton = document.createElement("button");
@@ -88,18 +90,37 @@ const footer = document.createElement("footer");
 footer.textContent = "© 2025 My ToDo App";
 app.appendChild(footer);
 
-console.log("Структура страницы успешно создана!");
-
 // ====================
 // ЛОГИКА ДОБАВЛЕНИЯ И УПРАВЛЕНИЯ ЗАДАЧАМИ
 // ====================
 
 let tasks = [];
-let draggedTaskId = null; // id перетаскиваемой задачи
+let draggedTaskId = null;
 
 // Генерация уникального ID
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+// ====================
+// ВАЛИДАЦИЯ ДАТЫ (ДД.ММ.ГГГГ)
+// ====================
+
+function isValidDisplayDate(dateStr) {
+  if (!dateStr) return true; // пусто — разрешено
+  const regex = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/;
+  if (!regex.test(dateStr)) return false;
+
+  const [, day, month, year] = dateStr.match(regex);
+  const d = parseInt(day, 10);
+  const m = parseInt(month, 10);
+  const y = parseInt(year, 10);
+
+  if (m < 1 || m > 12) return false;
+  if (d < 1 || d > 31) return false;
+
+  const date = new Date(y, m - 1, d);
+  return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d;
 }
 
 // ====================
@@ -118,14 +139,45 @@ function loadTasks() {
       tasks = parsed.map(task => ({
         id: task.id || generateId(),
         title: task.title || "",
-        date: task.date || null,
+        date: task.date || null, // ДД.ММ.ГГГГ
         completed: !!task.completed
       }));
     } catch (e) {
-      console.error("Ошибка загрузки задач из localStorage:", e);
+      console.error("Ошибка загрузки задач из localStorage:", e); // отловка 
       tasks = [];
     }
   }
+}
+
+// ====================
+// РЕДАКТИРОВАНИЕ ЗАДАЧИ
+// ====================
+
+function editTask(task) {
+  const newTitle = prompt("Измените название задачи:", task.title);
+  if (newTitle === null) return;
+  const trimmedTitle = newTitle.trim();
+  if (trimmedTitle === "") {
+    alert("Название задачи не может быть пустым!");
+    return;
+  }
+
+  const currentDate = task.date || "";
+  const newDateInput = prompt("Измените дату (ДД.ММ.ГГГГ):", currentDate);
+  if (newDateInput === null) return;
+
+  const trimmedDate = newDateInput.trim();
+
+  if (trimmedDate !== "" && !isValidDisplayDate(trimmedDate)) {
+    alert("Некорректная дата! Используйте формат: ДД.ММ.ГГГГ (например: 05.12.2025)");
+    return;
+  }
+
+  task.title = trimmedTitle;
+  task.date = trimmedDate || null;
+
+  saveTasks();
+  renderTasks();
 }
 
 // ====================
@@ -134,7 +186,7 @@ function loadTasks() {
 
 function renderTasks(displayTasks = tasks) {
   taskList.innerHTML = "";
-  draggedTaskId = null; // сброс при перерисовке
+  draggedTaskId = null;
 
   displayTasks.forEach(task => {
     const li = document.createElement("li");
@@ -147,12 +199,7 @@ function renderTasks(displayTasks = tasks) {
     textSpan.className = "task-title";
 
     const dateSpan = document.createElement("span");
-    if (task.date) {
-      const [year, month, day] = task.date.split("-");
-      dateSpan.textContent = `${day}.${month}.${year}`;
-    } else {
-      dateSpan.textContent = "Без даты";
-    }
+    dateSpan.textContent = task.date || "Без даты";
     dateSpan.className = "task-date-display";
 
     // Кнопка удаления
@@ -169,18 +216,7 @@ function renderTasks(displayTasks = tasks) {
     const editBtn = document.createElement("button");
     editBtn.textContent = "Редактировать";
     editBtn.className = "edit-btn";
-    editBtn.addEventListener("click", () => {
-      const newTitle = prompt("Редактировать задачу:", task.title);
-      if (newTitle !== null && newTitle.trim() !== "") {
-        task.title = newTitle.trim();
-      }
-      const newDate = prompt("Редактировать дату (ДД-ММ-ГГГГ):", task.date || "");
-      if (newDate !== null) {
-        task.date = newDate.trim() || null;
-      }
-      saveTasks();
-      renderTasks();
-    });
+    editBtn.addEventListener("click", () => editTask(task));
 
     // Кнопка выполнения
     const toggleBtn = document.createElement("button");
@@ -220,9 +256,7 @@ function renderTasks(displayTasks = tasks) {
       const draggedTask = tasks.find(t => t.id === draggedTaskId);
       const targetIndex = tasks.findIndex(t => t.id === task.id);
 
-      // Удаляем из старого места
       tasks = tasks.filter(t => t.id !== draggedTaskId);
-      // Вставляем в новое
       tasks.splice(targetIndex, 0, draggedTask);
 
       saveTasks();
@@ -246,17 +280,22 @@ function renderTasks(displayTasks = tasks) {
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const title = inputTitle.value.trim();
-  const date = inputDate.value;
+  const dateInput = inputDate.value.trim();
 
   if (title === "") {
     alert("Пожалуйста, введите название задачи!");
     return;
   }
 
+  if (dateInput !== "" && !isValidDisplayDate(dateInput)) {
+    alert("Некорректная дата! Используйте формат: ДД.ММ.ГГГГ (например: 05.12.2025)");
+    return;
+  }
+
   tasks.push({
     id: generateId(),
     title,
-    date: date || null,
+    date: dateInput || null,
     completed: false
   });
 
@@ -288,7 +327,9 @@ sortButton.addEventListener("click", () => {
   const sorted = [...tasks].sort((a, b) => {
     if (!a.date) return 1;
     if (!b.date) return -1;
-    return new Date(a.date) - new Date(b.date);
+    const [da, ma, ya] = a.date.split(".");
+    const [db, mb, yb] = b.date.split(".");
+    return new Date(ya, ma - 1, da) - new Date(yb, mb - 1, db);
   });
   renderTasks(sorted);
 });
@@ -303,5 +344,5 @@ searchInput.addEventListener("input", () => {
 // ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
 // ====================
 
-loadTasks(); // загрузка из LocalStorage
-renderTasks(); // отображение
+loadTasks();
+renderTasks();
