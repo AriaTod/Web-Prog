@@ -1,6 +1,3 @@
-// Проверка подключения
-console.log("Скрипт подключен и работает!");
-
 // ====================
 // СОЗДАНИЕ ОСНОВНОЙ СТРУКТУРЫ
 // ====================
@@ -150,7 +147,12 @@ function renderTasks(displayTasks = tasks) {
     textSpan.className = "task-title";
 
     const dateSpan = document.createElement("span");
-    dateSpan.textContent = task.date || "Без даты";
+    if (task.date) {
+      const [year, month, day] = task.date.split("-");
+      dateSpan.textContent = `${day}.${month}.${year}`;
+    } else {
+      dateSpan.textContent = "Без даты";
+    }
     dateSpan.className = "task-date-display";
 
     // Кнопка удаления
@@ -172,7 +174,7 @@ function renderTasks(displayTasks = tasks) {
       if (newTitle !== null && newTitle.trim() !== "") {
         task.title = newTitle.trim();
       }
-      const newDate = prompt("Редактировать дату (YYYY-MM-DD):", task.date || "");
+      const newDate = prompt("Редактировать дату (ДД-ММ-ГГГГ):", task.date || "");
       if (newDate !== null) {
         task.date = newDate.trim() || null;
       }
@@ -297,12 +299,9 @@ searchInput.addEventListener("input", () => {
   renderTasks(searched);
 });
 
-console.log("Фильтрация, сортировка и поиск подключены!");
-
 // ====================
 // ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
 // ====================
 
 loadTasks(); // загрузка из LocalStorage
 renderTasks(); // отображение
-console.log("Приложение полностью готово к работе! Drag & Drop включён!");
