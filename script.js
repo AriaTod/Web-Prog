@@ -95,7 +95,7 @@ app.appendChild(footer);
 // ====================
 
 let tasks = [];
-let draggedTaskId = null;
+let draggedTaskId = null; // id перетаскиваемой задачи
 
 // Генерация уникального ID
 function generateId() {
@@ -185,8 +185,10 @@ function editTask(task) {
 // ====================
 
 function renderTasks(displayTasks = tasks) {
-  taskList.innerHTML = "";
-  draggedTaskId = null;
+  while (taskList.firstChild) {
+    taskList.removeChild(taskList.firstChild);
+  } // - innerHTML
+  draggedTaskId = null; // сброс при перерисовке
 
   displayTasks.forEach(task => {
     const li = document.createElement("li");
@@ -344,5 +346,5 @@ searchInput.addEventListener("input", () => {
 // ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
 // ====================
 
-loadTasks();
-renderTasks();
+loadTasks(); // загрузка из LocalStorage
+renderTasks(); // отображение
