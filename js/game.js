@@ -1,6 +1,5 @@
 (function (window) {
   'use strict';
-
   function cloneMatrix(mat) {
     return mat.map(function (row) { return row.slice(); });
   }
@@ -9,8 +8,8 @@
   function Game2048(size) {
     this.size = size || 4;
     this.score = 0;
-    this.grid = []; // матрица size x size
-    this.prevState = null; // для undo (хранит {grid, score})
+    this.grid = [];
+    this.prevState = null;
     this.isOver = false;
     this.storageKey = 'game2048_state';
   }
@@ -25,10 +24,28 @@
       for (var c = 0; c < this.size; c++) row.push(0);
       this.grid.push(row);
     }
-    // В начале 1-3 случайных тайла
-    var initialCount = Math.floor(Math.random() * 3) + 1; // 1..3
-    for (var i = 0; i < initialCount; i++) this.addRandomTile();
+
+    // В начале 2 плитки. Да, зато без бага
+    this.addSingleTile();
+    this.addSingleTile();
+
     this.saveStateToStorage();
+  };
+
+  // Добавляет одну плитку без шанса на вторую (используется только при старте)
+  Game2048.prototype.addSingleTile = function () {
+    var empty = [];
+    for (var r = 0; r < this.size; r++) {
+      for (var c = 0; c < this.size; c++) {
+        if (this.grid[r][c] === 0) empty.push([r, c]);
+      }
+    }
+    if (empty.length === 0) return;
+
+    var idx = Math.floor(Math.random() * empty.length);
+    var val = Math.random() < 0.25 ? 4 : 2;
+    var cell = empty[idx];
+    this.grid[cell[0]][cell[1]] = val;
   };
 
   // Сохранение текущего состояния в prevState (для undo)
@@ -51,7 +68,8 @@
   };
 
   // Добавляет новую плитку 2 или 4 в случайную пустую ячейку.
-  // Есть шанс 25% для 4, 75% - 2 
+  // Есть шанс 25% для 4, 75% - 2
+  // После хода — шанс 20% добавить вторую плитку
   Game2048.prototype.addRandomTile = function () {
     var empty = [];
     for (var r = 0; r < this.size; r++) {
@@ -60,17 +78,18 @@
       }
     }
     if (empty.length === 0) return false;
+
     var spawnCount = 1;
     var idx = Math.floor(Math.random() * empty.length);
     var val = Math.random() < 0.25 ? 4 : 2;
     var cell = empty.splice(idx, 1)[0];
     this.grid[cell[0]][cell[1]] = val;
 
-    // шанс добавить вторую плитку (20%)
+    // шанс добавить вторую плитку (20%) после хода
     if (empty.length > 0 && Math.random() < 0.2) {
       var idx2 = Math.floor(Math.random() * empty.length);
       var val2 = Math.random() < 0.25 ? 4 : 2;
-      var cell2 = empty[idx2];
+      var cell2 = empty.splice(idx2, 1)[0];
       this.grid[cell2[0]][cell2[1]] = val2;
       spawnCount = 2;
     }
@@ -94,10 +113,7 @@
       }
     }
     while (newRow.length < size) newRow.push(0);
-
-    // выяснить, изменился ли ряд по сравнению с входным
     for (var j = 0; j < size; j++) if (newRow[j] !== row[j]) { moved = true; break; }
-
     return { newRow: newRow, gainedScore: gained, moved: moved };
   };
 
@@ -106,10 +122,7 @@
     if (this.isOver) return { moved: false, score: 0 };
     var movedOverall = false;
     var gainedTotal = 0;
-
-    // Сохраняем предыдущую для undo
     this._savePrev();
-
     // helper для поворота/трансформации матрицы
     var self = this;
     function rotateGrid90Clockwise(mat) {
@@ -128,18 +141,16 @@
       for (var t = 0; t < (times % 4); t++) res = rotateGrid90Clockwise(res);
       return res;
     }
-
     // чтобы унифицировать, преобразуем задачу к сдвигу влево:
-    // mapping: left -> rotate 0, up -> rotate 1 (90 cw), right -> rotate 2, down -> rotate 3
+    // mapping: left -> rotate 0, up -> rotate 3 (90 cw), right -> rotate 2, down -> rotate 1
     var rotateTimes = 0;
     if (direction === 'left') rotateTimes = 0;
-    else if (direction === 'up') rotateTimes = 1;
+    else if (direction === 'up') rotateTimes = 3;
     else if (direction === 'right') rotateTimes = 2;
-    else if (direction === 'down') rotateTimes = 3;
+    else if (direction === 'down') rotateTimes = 1;
     else return { moved: false, score: 0 };
 
     var working = rotateGrid(this.grid, rotateTimes);
-
     for (var r = 0; r < this.size; r++) {
       var row = working[r].slice();
       var res = this._compressAndMergeRow(row);
@@ -147,7 +158,6 @@
       if (res.gainedScore) gainedTotal += res.gainedScore;
       working[r] = res.newRow;
     }
-
     //исходная ориентация
     var finalGrid = rotateGrid(working, (4 - rotateTimes) % 4);
 
@@ -163,7 +173,6 @@
       // если не было ходов — отмена prevState
       this.prevState = null;
     }
-
     return { moved: movedOverall, score: gainedTotal };
   };
 
@@ -225,5 +234,4 @@
 
   // Экспорт
   window.Game2048 = Game2048;
-
 })(window);

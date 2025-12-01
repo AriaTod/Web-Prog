@@ -127,6 +127,8 @@
       score: parseInt(document.getElementById('final-score').textContent, 10),
       date: dateStr
     });
+    records.sort((a, b) => b.score - a.score); // sort(топ-10)
+    records = records.slice(0, 10);
     localStorage.setItem('leaderboard', JSON.stringify(records));
     saveMsg.style.opacity = 1;
     populateLeaderboard('#leaderboard-table', records);
