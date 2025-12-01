@@ -145,15 +145,50 @@ body {
 }
 #save-msg { margin-top: 8px; color: green; font-weight: 600; }
 
-/* -------- АДАПТИВНЫЙ ДИЗАЙН — МЕДИАЗАПРОСЫ -------- */
+/* -------- АДАПТИВНЫЙ ДИЗАЙН — МЕДИАЗАПРОСЫ  */
 
+.game-container {
+  width: 500px;
+  height: 500px;
+  max-width: 95vw;        
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+}
+
+/* Планшеты и ниже */
 @media (max-width: 768px) {
-  nav ul {
+  .game-area {
     flex-direction: column;
     align-items: center;
+    gap: 20px;
   }
+  
+  .game-container {
+    width: 90vw;
+    height: 90vw;
+    max-width: 460px;
+    max-height: 460px;
+    padding: 12px;
+  }
+  
+  .grid { gap: 10px; }
+  
+  .app-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+}
 
-  .product-list {
-    grid-template-columns: 1fr;
+/* Телефоны */
+@media (max-width: 480px) {
+  .game-container {
+    width: 92vw;
+    height: 92vw;
+    padding: 10px;
   }
+  
+  .grid { gap: 8px; }
+  
+  body { padding: 10px; }
 }
