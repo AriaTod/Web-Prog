@@ -147,25 +147,13 @@ body {
 
 /* -------- АДАПТИВНЫЙ ДИЗАЙН — МЕДИАЗАПРОСЫ -------- */
 
-/* Планшеты (768px — 1024px) */
-@media (max-width: 1024px) {
-  .game-area { flex-direction: column; align-items: center; gap: 16px; }
-  .game-container { width: 360px; height: 360px; }
-  .info-panel { max-width: 100%; text-align: center; }
-  .app-header { flex-direction: column; gap: 8px; }
-  .controls { justify-content: center; }
-  .grid .cell { font-size: 16px; }
-}
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
 
-/* Смартфоны (до 767px) */
-@media (max-width: 767px) {
-  .game-container { width: 100%; max-width: 320px; height: 320px; }
-  .grid .cell { font-size: 12px; padding: 4px; }
-  .game-title { font-size: 26px; }
-  .subtitle { font-size: 10px; }
-  .score-value { font-size: 16px; }
-  .score-card { padding: 4px 6px; min-width: 60px; font-size: 12px; }
-  .controls { flex-direction: column; gap: 6px; align-items: center; }
-  .info-panel { font-size: 12px; max-width: 100%; text-align: center; }
-  .modal-content { width: 90%; max-width: 90%; }
+  .product-list {
+    grid-template-columns: 1fr;
+  }
 }
