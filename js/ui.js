@@ -5,9 +5,7 @@
   function createGrid(containerSelector, size) {
     var container = document.querySelector(containerSelector);
     if (!container) return;
-
     container.innerHTML = '';
-
     for (var r = 0; r < size; r++) {
       for (var c = 0; c < size; c++) {
         var cell = document.createElement('div');
@@ -42,7 +40,7 @@
 
   /**
    * Заполняет таблицу рекордов.
-   * records: [{ name: "...", score: number }]
+   * records: [{ name: "...", score: number, date: "dd.mm.yyyy" }]
    */
   function populateLeaderboard(selector, records) {
     var tbody = document.querySelector(selector + ' tbody');
@@ -53,7 +51,7 @@
     if (!records || records.length === 0) {
       var tr = document.createElement('tr');
       var td = document.createElement('td');
-      td.setAttribute('colspan', '3');
+      td.setAttribute('colspan', '4');
       td.textContent = 'Пока нет сохранённых рекордов.';
       td.style.opacity = '0.8';
       tr.appendChild(td);
@@ -76,6 +74,10 @@
       tdScore.textContent = String(records[i].score);
       row.appendChild(tdScore);
 
+      var tdDate = document.createElement('td');
+      tdDate.textContent = records[i].date || '—';
+      row.appendChild(tdDate);
+
       tbody.appendChild(row);
     }
   }
@@ -89,7 +91,7 @@
     if (scoreEl) scoreEl.textContent = String(score);
 
     var saveMsg = document.getElementById('save-msg');
-    if (saveMsg) saveMsg.classList.add('hidden');
+    if (saveMsg) saveMsg.style.opacity = 0;
 
     var nameInput = document.getElementById('player-name');
     if (nameInput) nameInput.value = '';
@@ -97,17 +99,27 @@
     openModal('gameover-modal');
   }
 
-  /** Сохраняет имя игрока и отображает сообщение */
+  /** Сохраняет имя игрока, дату и счёт в localStorage */
   function savePlayerName() {
     var nameInput = document.getElementById('player-name');
     var saveMsg = document.getElementById('save-msg');
-
     if (!nameInput || !saveMsg) return;
-
     if (nameInput.value.trim() === '') return;
 
-    // Пока просто сообщение
-    saveMsg.classList.remove('hidden');
+    var today = new Date();
+    var dateStr = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
+
+    var records = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+    records.push({
+      name: nameInput.value.trim(),
+      score: parseInt(document.getElementById('final-score').textContent),
+      date: dateStr
+    });
+
+    localStorage.setItem('leaderboard', JSON.stringify(records));
+    saveMsg.style.opacity = 1;
+
+    populateLeaderboard('#leaderboard-table', records);
   }
 
   window.UI = {

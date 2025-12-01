@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-  // Создается сетку 4x4
+  // Создаётся сетка 4x4
   UI.createGrid('#grid', 4);
 
   // Устанавливается начальный счёт
@@ -14,9 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var leaderClose2 = document.getElementById('leader-close-2');
   var leaderClear = document.getElementById('leader-clear');
 
-  // Новая игра (пока заглушка)
+  // Новая игра
   btnNew.addEventListener('click', function () {
     UI.renderScore(0);
+    UI.createGrid('#grid', 4);
   });
 
   // Undo — пока не реализовано
@@ -24,7 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Открыть таблицу рекордов
   btnLeader.addEventListener('click', function () {
-    UI.populateLeaderboard('#leaderboard-table', []);
+    var records = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+    UI.populateLeaderboard('#leaderboard-table', records);
     UI.openModal('leaderboard-modal');
   });
 
@@ -35,8 +37,17 @@ document.addEventListener('DOMContentLoaded', function () {
   leaderClose.addEventListener('click', closeLeaderboard);
   leaderClose2.addEventListener('click', closeLeaderboard);
 
-  // Очистить
+  // Очистить таблицу
   leaderClear.addEventListener('click', function () {
+    localStorage.removeItem('leaderboard');
     UI.populateLeaderboard('#leaderboard-table', []);
+  });
+
+  // Game Over — кнопки в модалке
+  document.getElementById('save-score').addEventListener('click', UI.savePlayerName);
+  document.getElementById('restart-game').addEventListener('click', function() {
+    UI.closeModal('gameover-modal');
+    UI.renderScore(0);
+    UI.createGrid('#grid', 4);
   });
 });

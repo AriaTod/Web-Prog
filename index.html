@@ -45,28 +45,25 @@
 
   <!-- Модальное окно — таблица рекордов -->
   <div id="leaderboard-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="leader-title">
-    <div class="modal-content" role="document">
+    <div class="modal-content">
       <header class="modal-header">
         <h2 id="leader-title">Таблица рекордов</h2>
         <button class="modal-close" id="leader-close" aria-label="Закрыть">&times;</button>
       </header>
-
       <div class="modal-body">
         <table class="leaderboard-table" id="leaderboard-table" aria-describedby="leader-desc">
-          <caption id="leader-desc">Топ-10 — Имя / Очки</caption>
+          <caption id="leader-desc">Топ-10 — Имя / Очки / Дата</caption>
           <thead>
             <tr>
               <th>#</th>
               <th>Имя</th>
               <th>Очки</th>
+              <th>Дата</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- Заполняется через JS -->
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
-
       <footer class="modal-footer">
         <button id="leader-clear" class="btn btn-ghost">Очистить</button>
         <button id="leader-close-2" class="btn">Закрыть</button>
@@ -76,22 +73,17 @@
 
   <!-- Модальное окно — игра окончена -->
   <div id="gameover-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="gameover-title">
-    <div class="modal-content" role="document">
+    <div class="modal-content">
       <header class="modal-header">
-        <h2 id="gameover-title">Игра окончена</h2>
+        <h2 id="gameover-title">Игра окончена!</h2>
       </header>
-
       <div class="modal-body">
-        <p>Ваш счёт:</p>
-        <div id="final-score" class="score-value">0</div>
-        <div class="input-wrap">
-          <label for="player-name">Введите имя:</label>
-          <input type="text" id="player-name" placeholder="Ваше имя" />
-        </div>
+        <p>Ваш счёт: <span id="final-score">0</span></p>
+        <label for="player-name">Введите имя:</label>
+        <input type="text" id="player-name" />
         <button id="save-score" class="btn">Сохранить результат</button>
-        <p id="save-msg" class="hidden">Ваш рекорд сохранен!</p>
+        <p id="save-msg" style="opacity:0; margin-top:8px;">Ваш рекорд сохранён!</p>
       </div>
-
       <footer class="modal-footer">
         <button id="restart-game" class="btn">Начать заново</button>
       </footer>
