@@ -4,34 +4,34 @@
   html, body { height: 100%; }
 
 body {
-font-family: "Helvetica Neue", Arial, sans-serif;
-background: #faf8ef;
-color: #776e65;
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-align-items: center;
-padding: 20px 10px;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background: #faf8ef;
+  color: #776e65;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 10px;
 }
 
 /* Контейнер приложения */
 .app {
-width: 95vw;
-max-width: 500px;
-display: flex;
-flex-direction: column;
-align-items: center;
+  width: 95vw;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Шапка */
 .app-header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 18px;
-flex-wrap: wrap;
-width: 100%;
-text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  width: 100%;
+  text-align: center;
 }
 .title-wrap { display: flex; flex-direction: column; gap: 4px; }
 .game-title { font-size: 36px; letter-spacing: 2px; color: #776e65; }
@@ -52,93 +52,184 @@ text-align: center;
 
 /* Игровая область */
 .game-area {
-width: 100%;
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
 .game-container {
-width: 100%;
-max-width: 500px;
-aspect-ratio: 1 / 1;
-max-height: 95vw;
-background: #bbada0;
-padding: 15px;
-border-radius: 10px;
-position: relative;
-box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1 / 1;
+  max-height: 95vw;
+  background: #bbada0;
+  padding: 15px;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.25);
 }
 
 /* Сетка 4×4 */
 .grid {
-width: 100%;
-height: 100%;
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-grid-template-rows: repeat(4, 1fr);
-gap: 15px;
-background: #bbada0;
-border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 15px;
+  background: #bbada0;
+  border-radius: 8px;
 }
 .grid .cell {
-background: rgba(238, 228, 218, 0.35);
-border-radius: 8px;
+  background: rgba(238, 228, 218, 0.35);
+  border-radius: 8px;
+  /* пустая ячейка — центрирование (заполненные переопределят) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Слой для тайлов */
+/* -------- Стили для плиток -------- */
+/* Базовый вид заполненной ячейки */
+.grid .cell {
+  transition: background-color 180ms linear, transform 120ms ease, box-shadow 120ms ease;
+  font-weight: 700;
+  color: #776e65;
+  /* адаптивный размер шрифта: от 12px до 28px в зависимости от ширины контейнера */
+  font-size: clamp(12px, 3.5vw, 28px);
+  user-select: none;
+}
+
+/* общий стиль для заполненной клетки */
+.grid .cell-filled {
+  background: #eee4da;    /* базовый фон — будет переопределяться специфичными классами */
+  color: #776e65;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06) inset;
+  transform-origin: center;
+  border-radius: 8px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Более мягкая тень и контрастный текст для больших значений */
+.grid .cell-filled.cell-8,
+.grid .cell-filled.cell-16,
+.grid .cell-filled.cell-32,
+.grid .cell-filled.cell-64,
+.grid .cell-filled.cell-128,
+.grid .cell-filled.cell-256,
+.grid .cell-filled.cell-512,
+.grid .cell-filled.cell-1024,
+.grid .cell-filled.cell-2048 {
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* Цвета для конкретных значений — можно расширить */
+.grid .cell-2 { background: #eee4da; color: #776e65; }
+.grid .cell-4 { background: #eee1c9; color: #776e65; }
+.grid .cell-8 { background: #f3b27a; color: #fff; }
+.grid .cell-16 { background: #f68b64; color: #fff; }
+.grid .cell-32 { background: #f65e3b; color: #fff; }
+.grid .cell-64 { background: #edcf72; color: #fff; }
+.grid .cell-128 { background: linear-gradient(120deg,#edcc61,#f0d86b); color: #fff; }
+.grid .cell-256 { background: linear-gradient(120deg,#edc850,#f2c66a); color: #fff; }
+.grid .cell-512 { background: linear-gradient(120deg,#edc53f,#f5b63e); color: #fff; }
+.grid .cell-1024 { background: linear-gradient(120deg,#e7b14a,#e39b2c); color: #fff; font-size: clamp(12px, 3vw, 22px); }
+.grid .cell-2048 { background: linear-gradient(120deg,#eb9f3b,#f27b3a); color: #fff; font-size: clamp(12px, 2.8vw, 20px); }
+
+/* Для ещё больших значений уменьшаем шрифт */
+.grid .cell-4096, .grid .cell-8192 {
+  background: linear-gradient(120deg,#b06ab3,#8e44ad);
+  color: #fff;
+  font-size: clamp(10px, 2.4vw, 18px);
+}
+
+/* Анимация появления новой плитки (добавляй класс .cell-new при создании) */
+.grid .cell-new {
+  animation: tile-pop 160ms ease;
+}
+@keyframes tile-pop {
+  0%   { transform: scale(0.2); opacity: 0.0; }
+  60%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* Анимация слияния плитки (добавляй класс .cell-merge при слиянии) */
+.grid .cell-merge {
+  animation: tile-merge 200ms ease;
+}
+@keyframes tile-merge {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* Мелкие визуальные улучшения для очень маленьких экранов */
+@media (max-width: 420px) {
+  .grid .cell { font-size: clamp(10px, 5.5vw, 20px); }
+  .grid .cell-1024, .grid .cell-2048 { font-size: clamp(10px, 4.5vw, 18px); }
+}
+
+/* Опционально: плавное изменение расположения плиток (если перейдёшь на absolute-тайлы) */
+.tiles-layer { transition: transform 120ms ease; }
+
+/* Слой для тайлов (повтор для надёжности) */
 .tiles-layer { position: absolute; inset: 15px; pointer-events: none; }
 
-/* Модалки */
+/* Модалки (повтор для контекста) */
 .modal.hidden { display: none; }
 .modal {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.45);
-display: flex;
-justify-content: center;
-align-items: center;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .modal-content {
-width: 90%;
-max-width: 680px;
-background: #fff;
-border-radius: 10px;
-overflow: hidden;
-box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+  width: 90%;
+  max-width: 680px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.35);
 }
 .modal-header {
-padding: 14px 18px;
-border-bottom: 1px solid #eee;
-display: flex;
-justify-content: space-between;
-align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .modal-body { padding: 18px; }
 .modal-footer {
-padding: 12px 18px;
-border-top: 1px solid #eee;
-display: flex;
-justify-content: flex-end;
-gap: 8px;
+  padding: 12px 18px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 .modal-close {
-background: transparent;
-border: none;
-font-size: 22px;
-cursor: pointer;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
 }
 
 /* Таблица */
 .leaderboard-table {
-width: 100%;
-border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 .leaderboard-table th, .leaderboard-table td {
-padding: 8px 10px;
-border-bottom: 1px solid #eee;
-font-size: 14px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
 }
 .leaderboard-table thead th { font-weight: 700; color: #555; }
 
@@ -147,16 +238,16 @@ font-size: 14px;
 
 /* Модалка Game Over */
 #gameover-modal .input-wrap {
-margin: 12px 0;
-display: flex;
-flex-direction: column;
-gap: 4px;
+  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 #gameover-modal input {
-padding: 6px 8px;
-border-radius: 4px;
-border: 1px solid #ccc;
-font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
 #save-msg { margin-top: 8px; color: green; font-weight: 600; }
 
@@ -164,11 +255,11 @@ font-size: 14px;
 
 /* Планшеты */
 @media (max-width: 768px) {
-.game-area { gap: 15px; }
-.game-container { padding: 12px; max-width: 90vw; height: 90vw; }
-.grid { gap: 10px; }
-.game-title { font-size: 28px; }
-.score-value { font-size: 18px; }
+  .game-area { gap: 15px; }
+  .game-container { padding: 12px; max-width: 90vw; height: 90vw; }
+  .grid { gap: 10px; }
+  .game-title { font-size: 28px; }
+  .score-value { font-size: 18px; }
 }
 
 /* Смартфоны */
