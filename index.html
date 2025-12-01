@@ -74,6 +74,30 @@
     </div>
   </div>
 
+  <!-- Модальное окно — игра окончена -->
+  <div id="gameover-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="gameover-title">
+    <div class="modal-content" role="document">
+      <header class="modal-header">
+        <h2 id="gameover-title">Игра окончена</h2>
+      </header>
+
+      <div class="modal-body">
+        <p>Ваш счёт:</p>
+        <div id="final-score" class="score-value">0</div>
+        <div class="input-wrap">
+          <label for="player-name">Введите имя:</label>
+          <input type="text" id="player-name" placeholder="Ваше имя" />
+        </div>
+        <button id="save-score" class="btn">Сохранить результат</button>
+        <p id="save-msg" class="hidden">Ваш рекорд сохранен!</p>
+      </div>
+
+      <footer class="modal-footer">
+        <button id="restart-game" class="btn">Начать заново</button>
+      </footer>
+    </div>
+  </div>
+
   <script src="js/ui.js"></script>
   <script src="js/main.js"></script>
 </body>

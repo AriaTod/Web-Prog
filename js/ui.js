@@ -80,11 +80,43 @@
     }
   }
 
+  /** Показать модалку Game Over с финальным счётом */
+  function showGameOver(score) {
+    var modal = document.getElementById('gameover-modal');
+    if (!modal) return;
+
+    var scoreEl = document.getElementById('final-score');
+    if (scoreEl) scoreEl.textContent = String(score);
+
+    var saveMsg = document.getElementById('save-msg');
+    if (saveMsg) saveMsg.classList.add('hidden');
+
+    var nameInput = document.getElementById('player-name');
+    if (nameInput) nameInput.value = '';
+
+    openModal('gameover-modal');
+  }
+
+  /** Сохраняет имя игрока и отображает сообщение */
+  function savePlayerName() {
+    var nameInput = document.getElementById('player-name');
+    var saveMsg = document.getElementById('save-msg');
+
+    if (!nameInput || !saveMsg) return;
+
+    if (nameInput.value.trim() === '') return;
+
+    // Пока просто сообщение
+    saveMsg.classList.remove('hidden');
+  }
+
   window.UI = {
     createGrid: createGrid,
     renderScore: renderScore,
     openModal: openModal,
     closeModal: closeModal,
-    populateLeaderboard: populateLeaderboard
+    populateLeaderboard: populateLeaderboard,
+    showGameOver: showGameOver,
+    savePlayerName: savePlayerName
   };
 })(window, document);
