@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-  // создание игру
+  // создание игры
   var game = new Game2048(4);
 
-  // если есть состояние в localStorage — загружаем, иначе инициализируем новую игру
+  // если есть состояние в localStorage — загружаем, иначе инициализация новой игры
   var loaded = game.loadStateFromStorage();
   if (!loaded) game.init();
 
@@ -87,12 +87,62 @@ document.addEventListener('DOMContentLoaded', function () {
       UI.renderBoard(game.grid);
       UI.renderScore(game.score);
       btnUndo.disabled = false;
-      // если игра закончилась — показать модалку Game Over
       if (game.isOver) {
         UI.showGameOver(game.score);
       }
     }
   });
+
+  // ------------------- Свайпы на мобилах -------------------
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var touchEndX = 0;
+  var touchEndY = 0;
+
+  function handleSwipe() {
+    var dx = touchEndX - touchStartX;
+    var dy = touchEndY - touchStartY;
+
+    // Минимальное расстояние для свайпа
+    var minDist = 30;
+    if (Math.abs(dx) < minDist && Math.abs(dy) < minDist) return;
+
+    var direction;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      // горизонтальный свайп
+      direction = dx > 0 ? 'right' : 'left';
+    } else {
+      // вертикальный свайп
+      direction = dy > 0 ? 'down' : 'up';
+    }
+
+    var res = game.move(direction);
+    if (res.moved) {
+      UI.renderBoard(game.grid);
+      UI.renderScore(game.score);
+      btnUndo.disabled = false;
+      if (game.isOver) {
+        UI.showGameOver(game.score);
+      }
+    }
+  }
+
+  var gameContainer = document.getElementById('game-container');
+  gameContainer.addEventListener('touchstart', function (e) {
+    if (e.touches.length === 1) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }
+  });
+  gameContainer.addEventListener('touchmove', function (e) {
+    e.preventDefault(); // предотвратить скролл
+  }, { passive: false });
+  gameContainer.addEventListener('touchend', function (e) {
+    touchEndX = e.changedTouches[0].clientX;
+    touchEndY = e.changedTouches[0].clientY;
+    handleSwipe();
+  });
+  // -----------------------------------------------------------
 
   // Сохранение состояния перед выгрузкой
   window.addEventListener('beforeunload', function () {
