@@ -20,7 +20,7 @@
   function renderBoard(board) {
     if (!board || !board.length) return;
     var cells = document.querySelectorAll('.grid .cell');
-    //сетка уже создана и количество ячеек совпадает
+    // сетка уже создана и количество ячеек совпадает
     var idx = 0;
     for (var r = 0; r < board.length; r++) {
       for (var c = 0; c < board[r].length; c++) {
@@ -72,6 +72,7 @@
     var tbody = document.querySelector(selector + ' tbody');
     if (!tbody) return;
     tbody.innerHTML = '';
+
     if (!records || records.length === 0) {
       var tr = document.createElement('tr');
       var td = document.createElement('td');
@@ -82,20 +83,30 @@
       tbody.appendChild(tr);
       return;
     }
+
+    // Сортируем рекорды по очкам по убыванию
+    records.sort(function(a, b) { return b.score - a.score; });
+
+    // Ограничиваем топ-10
     for (var i = 0; i < Math.min(10, records.length); i++) {
       var row = document.createElement('tr');
+
       var tdIndex = document.createElement('td');
       tdIndex.textContent = String(i + 1);
       row.appendChild(tdIndex);
+
       var tdName = document.createElement('td');
       tdName.textContent = records[i].name;
       row.appendChild(tdName);
+
       var tdScore = document.createElement('td');
       tdScore.textContent = String(records[i].score);
       row.appendChild(tdScore);
+
       var tdDate = document.createElement('td');
       tdDate.textContent = records[i].date || '—';
       row.appendChild(tdDate);
+
       tbody.appendChild(row);
     }
   }
@@ -106,10 +117,13 @@
     if (!modal) return;
     var scoreEl = document.getElementById('final-score');
     if (scoreEl) scoreEl.textContent = String(score);
+
     var saveMsg = document.getElementById('save-msg');
     if (saveMsg) saveMsg.style.opacity = 0;
+
     var nameInput = document.getElementById('player-name');
     if (nameInput) nameInput.value = '';
+
     openModal('gameover-modal');
   }
 
@@ -118,19 +132,32 @@
     var nameInput = document.getElementById('player-name');
     var saveMsg = document.getElementById('save-msg');
     if (!nameInput || !saveMsg) return;
-    if (nameInput.value.trim() === '') return;
+
+    var name = nameInput.value.trim();
+    if (name === '') return;
+
     var today = new Date();
     var dateStr = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
+
     var records = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+
+    // Добавляем новый рекорд
     records.push({
-      name: nameInput.value.trim(),
+      name: name,
       score: parseInt(document.getElementById('final-score').textContent, 10),
       date: dateStr
     });
-    records.sort((a, b) => b.score - a.score); // sort(топ-10)
+
+    // Сортируем по убыванию очков и оставляем топ-10
+    records.sort(function(a, b) { return b.score - a.score; });
     records = records.slice(0, 10);
+
     localStorage.setItem('leaderboard', JSON.stringify(records));
+
+    // Показываем сообщение о сохранении
     saveMsg.style.opacity = 1;
+
+    // Обновляем таблицу
     populateLeaderboard('#leaderboard-table', records);
   }
 
