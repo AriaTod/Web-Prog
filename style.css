@@ -2,19 +2,26 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; }
 
-/* Центрирование всего приложения */
 body {
-  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Helvetica Neue", Arial, sans-serif;
   background: #faf8ef;
-  color: #333;
+  color: #776e65;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px 10px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  padding: 24px;
 }
 
 /* Контейнер приложения */
-.app { width: 100%; max-width: 1000px; }
+.app {
+  width: 100%;
+  max-width: 500px;          
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 /* Шапка */
 .app-header {
@@ -148,47 +155,42 @@ body {
 /* -------- АДАПТИВНЫЙ ДИЗАЙН — МЕДИАЗАПРОСЫ  */
 
 .game-container {
-  width: 500px;
-  height: 500px;
-  max-width: 95vw;        
+  width: 100%;
+  max-width: 500px;
   aspect-ratio: 1 / 1;
-  flex-shrink: 0;
+  background: #bbada0;
+  padding: 15px;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-/* Планшеты и ниже */
-@media (max-width: 768px) {
-  .game-area {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
+.grid {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 15px;
+  background: #bbada0;
+  border-radius: 8px;
+}
+
+.grid .cell {
+  background: rgba(238, 228, 218, 0.35);
+  border-radius: 8px;
+}
+
+/* На маленьких экранах — просто всё чуть меньше */
+@media (max-width: 480px) {
+  body { padding: 10px 5px; }
   
-  .game-container {
-    width: 90vw;
-    height: 90vw;
-    max-width: 460px;
-    max-height: 460px;
-    padding: 12px;
-  }
+  .game-title { font-size: 60px; font-weight: bold; }
+  .subtitle { font-size: 14px; }
   
+  .game-container { padding: 10px; }
   .grid { gap: 10px; }
   
-  .app-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
-  }
-}
-
-/* Телефоны */
-@media (max-width: 480px) {
-  .game-container {
-    width: 92vw;
-    height: 92vw;
-    padding: 10px;
-  }
-  
-  .grid { gap: 8px; }
-  
-  body { padding: 10px; }
+  .score-card { padding: 8px 12px; }
+  .btn { padding: 10px 14px; font-size: 14px; }
 }
