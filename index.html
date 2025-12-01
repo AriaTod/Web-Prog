@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2048 — Лабораторная</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="title-wrap">
+        <h1 class="game-title">2048</h1>
+        <p class="subtitle">Лабораторная работа №3 — 2048</p>
+      </div>
+
+      <!-- Блок со счётом и кнопками -->
+      <div class="score-panel">
+        <div class="score-card">
+          <div class="score-label">Счёт</div>
+          <div id="current-score" class="score-value">0</div>
+        </div>
+
+        <div class="controls">
+          <button id="btn-new" class="btn">Новая игра</button>
+          <button id="btn-undo" class="btn" disabled>Отменить</button>
+          <button id="btn-leader" class="btn">Таблица рекордов</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Основная игровая область -->
+    <main class="game-area">
+      <section id="game-container" class="game-container" aria-label="Игровое поле 2048">
+        <!-- Сетка будет создана в JS -->
+        <div id="grid" class="grid" role="grid" aria-readonly="true"></div>
+        <div id="tiles-layer" class="tiles-layer" aria-hidden="true"></div>
+      </section>
+
+      <aside class="info-panel">
+        <p>Управление: стрелки на клавиатуре (компик). На мобильных — кнопки/свайпы (будет позже).</p>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Модальное окно — таблица рекордов -->
+  <div id="leaderboard-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="leader-title">
+    <div class="modal-content" role="document">
+      <header class="modal-header">
+        <h2 id="leader-title">Таблица рекордов</h2>
+        <button class="modal-close" id="leader-close" aria-label="Закрыть">&times;</button>
+      </header>
+
+      <div class="modal-body">
+        <table class="leaderboard-table" id="leaderboard-table" aria-describedby="leader-desc">
+          <caption id="leader-desc">Топ-10 — Имя / Очки</caption>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Имя</th>
+              <th>Очки</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Заполняется через JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="modal-footer">
+        <button id="leader-clear" class="btn btn-ghost">Очистить</button>
+        <button id="leader-close-2" class="btn">Закрыть</button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
