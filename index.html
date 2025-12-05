@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+    <meta 
+    name="viewport" 
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <title>2048 — Лабораторная</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/jpg" href="assets/1.jpg">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="title-wrap">
+        <h1 class="game-title">2048</h1>
+        <p class="subtitle">Лабораторная работа №3 — 2048</p>
+      </div>
+
+      <!-- Блок со счётом и кнопками -->
+      <div class="score-panel">
+        <div class="score-card">
+          <div class="score-label">Счёт</div>
+          <div id="current-score" class="score-value">0</div>
+        </div>
+
+        <div class="controls">
+          <button id="btn-new" class="btn">Новая игра</button>
+          <button id="btn-undo" class="btn" disabled>Отменить</button>
+          <button id="btn-leader" class="btn">Таблица рекордов</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Основная игровая область -->
+    <main class="game-area">
+      <section id="game-container" class="game-container" aria-label="Игровое поле 2048">
+        <!-- Сетка будет создана в JS -->
+        <div id="grid" class="grid" role="grid" aria-readonly="true"></div>
+        <div id="tiles-layer" class="tiles-layer" aria-hidden="true"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Модальное окно — таблица рекордов -->
+  <div id="leaderboard-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="leader-title">
+    <div class="modal-content">
+      <header class="modal-header">
+        <h2 id="leader-title">Таблица рекордов</h2>
+        <button class="modal-close" id="leader-close" aria-label="Закрыть">&times;</button>
+      </header>
+      <div class="modal-body">
+        <table class="leaderboard-table" id="leaderboard-table" aria-describedby="leader-desc">
+          <caption id="leader-desc">Топ-10 — Имя / Очки / Дата</caption>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Имя</th>
+              <th>Очки</th>
+              <th>Дата</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <footer class="modal-footer">
+        <button id="leader-clear" class="btn btn-ghost">Очистить</button>
+        <button id="leader-close-2" class="btn">Закрыть</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Модальное окно — игра окончена -->
+  <div id="gameover-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="gameover-title">
+    <div class="modal-content">
+      <header class="modal-header">
+        <h2 id="gameover-title">Игра окончена!</h2>
+      </header>
+      <div class="modal-body">
+        <p>Ваш счёт: <span id="final-score">0</span></p>
+        <label for="player-name">Введите имя:</label>
+        <input type="text" id="player-name" />
+        <button id="save-score" class="btn">Сохранить результат</button>
+        <p id="save-msg" style="opacity:0; margin-top:8px;">Ваш рекорд сохранён!</p>
+      </div>
+      <footer class="modal-footer">
+        <button id="restart-game" class="btn">Начать заново</button>
+      </footer>
+    </div>
+  </div>
+
+    <script src="js/game.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
