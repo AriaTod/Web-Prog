@@ -1,0 +1,73 @@
+<main id="app">
+
+  <!-- Блок текущей локации / выбранного города -->
+  <section id="current-location">
+    <h2>Текущее местоположение</h2>
+  </section>
+
+  <!-- Состояния приложения -->
+  <section id="app-status">
+    <p id="loading" hidden>Загрузка данных о погоде...</p>
+    <p id="error" hidden>Произошла ошибка при получении данных</p>
+  </section>
+
+  <!-- Прогноз погоды -->
+  <section id="forecast">
+    <h3>Прогноз на 3 дня</h3>
+
+    <div class="forecast-list">
+      <div class="forecast-day">
+        <p class="date">Сегодня</p>
+        <p class="temp">— °C</p>
+        <p class="condition">—</p>
+      </div>
+
+      <div class="forecast-day">
+        <p class="date">Завтра</p>
+        <p class="temp">— °C</p>
+        <p class="condition">—</p>
+      </div>
+
+      <div class="forecast-day">
+        <p class="date">Послезавтра</p>
+        <p class="temp">— °C</p>
+        <p class="condition">—</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Форма добавления города -->
+  <section id="city-form-section">
+    <h3>Добавить город</h3>
+
+    <form id="city-form" autocomplete="off">
+      <input
+        type="text"
+        id="city-input"
+        placeholder="Введите название города"
+      />
+
+      <!-- Выпадающий список -->
+      <ul id="city-suggestions" hidden>
+        <!-- варианты будут добавляться позже -->
+      </ul>
+
+      <!-- Ошибка валидации -->
+      <p id="city-error" hidden>Город не найден</p>
+
+      <button type="submit">
+        Добавить
+      </button>
+    </form>
+  </section>
+
+  <!-- Список добавленных городов -->
+  <section id="cities-list-section">
+    <h3>Добавленные города</h3>
+
+    <ul id="cities-list">
+      <!-- Города появятся позже -->
+    </ul>
+  </section>
+
+</main>

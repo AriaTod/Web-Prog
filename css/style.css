@@ -1,0 +1,54 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 16px;
+}
+
+header,
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+section {
+  margin-bottom: 24px;
+}
+
+.forecast-list {
+  display: flex;
+  gap: 12px;
+}
+
+.forecast-day {
+  border: 1px solid #ccc;
+  padding: 8px;
+  min-width: 100px;
+}
+
+#city-form input {
+  display: block;
+  margin-bottom: 8px;
+  width: 100%;
+  max-width: 300px;
+}
+
+#city-form button {
+  margin-top: 8px;
+}
+
+#cities-list {
+  list-style: none;
+  padding: 0;
+}
+
+#cities-list li {
+  padding: 4px 0;
+}
+
+@media (max-width: 768px) {
+  .forecast-list {
+    flex-direction: column;
+  }
+}
