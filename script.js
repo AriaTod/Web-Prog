@@ -31,7 +31,6 @@ inputTitle.placeholder = "Введите задачу...";
 inputTitle.className = "task-input";
 inputTitle.required = true;
 
-// Заменяем input type="date" на type="text"
 const inputDate = document.createElement("input");
 inputDate.type = "text";
 inputDate.placeholder = "ДД.ММ.ГГГГ";
@@ -95,7 +94,7 @@ app.appendChild(footer);
 // ====================
 
 let tasks = [];
-let draggedTaskId = null; // id перетаскиваемой задачи
+let draggedTaskId = null;
 
 // Генерация уникального ID
 function generateId() {
@@ -105,7 +104,6 @@ function generateId() {
 // ====================
 // ВАЛИДАЦИЯ ДАТЫ (ДД.ММ.ГГГГ)
 // ====================
-
 function isValidDisplayDate(dateStr) {
   if (!dateStr) return true; // пусто — разрешено
   const regex = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/;
@@ -126,7 +124,6 @@ function isValidDisplayDate(dateStr) {
 // ====================
 // LOCALSTORAGE
 // ====================
-
 function saveTasks() {
   localStorage.setItem("todoTasks", JSON.stringify(tasks));
 }
@@ -139,56 +136,57 @@ function loadTasks() {
       tasks = parsed.map(task => ({
         id: task.id || generateId(),
         title: task.title || "",
-        date: task.date || null, // ДД.ММ.ГГГГ
+        date: task.date || null,
         completed: !!task.completed
       }));
     } catch (e) {
-      console.error("Ошибка загрузки задач из localStorage:", e); // отловка 
+      console.error("Ошибка загрузки задач из localStorage:", e);
       tasks = [];
     }
   }
 }
 
 // ====================
-// РЕДАКТИРОВАНИЕ ЗАДАЧИ
+// РЕДАКТИРОВАНИЕ ЗАДАЧИ (contentEditable вместо prompt)
 // ====================
-
 function editTask(task) {
-  const newTitle = prompt("Измените название задачи:", task.title);
-  if (newTitle === null) return;
-  const trimmedTitle = newTitle.trim();
-  if (trimmedTitle === "") {
-    alert("Название задачи не может быть пустым!");
-    return;
-  }
+  const taskLi = [...taskList.children].find(li => li.querySelector(".task-title").textContent === task.title);
+  if (!taskLi) return;
 
-  const currentDate = task.date || "";
-  const newDateInput = prompt("Измените дату (ДД.ММ.ГГГГ):", currentDate);
-  if (newDateInput === null) return;
+  const titleSpan = taskLi.querySelector(".task-title");
+  titleSpan.contentEditable = true;
+  titleSpan.focus();
 
-  const trimmedDate = newDateInput.trim();
+  const dateSpan = taskLi.querySelector(".task-date-display");
+  dateSpan.contentEditable = true;
 
-  if (trimmedDate !== "" && !isValidDisplayDate(trimmedDate)) {
-    alert("Некорректная дата! Используйте формат: ДД.ММ.ГГГГ (например: 05.12.2025)");
-    return;
-  }
+  titleSpan.addEventListener("blur", () => {
+    const trimmedTitle = titleSpan.textContent.trim();
+    if (trimmedTitle !== "") task.title = trimmedTitle;
+    titleSpan.contentEditable = false;
+    saveTasks();
+    renderTasks();
+  });
 
-  task.title = trimmedTitle;
-  task.date = trimmedDate || null;
-
-  saveTasks();
-  renderTasks();
+  dateSpan.addEventListener("blur", () => {
+    const trimmedDate = dateSpan.textContent.trim();
+    if (trimmedDate === "" || isValidDisplayDate(trimmedDate)) {
+      task.date = trimmedDate || null;
+    }
+    dateSpan.contentEditable = false;
+    saveTasks();
+    renderTasks();
+  });
 }
 
 // ====================
 // УНИВЕРСАЛЬНАЯ ФУНКЦИЯ РЕНДЕРА
 // ====================
-
 function renderTasks(displayTasks = tasks) {
   while (taskList.firstChild) {
     taskList.removeChild(taskList.firstChild);
-  } // - innerHTML
-  draggedTaskId = null; // сброс при перерисовке
+  }
+  draggedTaskId = null;
 
   displayTasks.forEach(task => {
     const li = document.createElement("li");
@@ -278,21 +276,13 @@ function renderTasks(displayTasks = tasks) {
 // ====================
 // СОБЫТИЕ ДОБАВЛЕНИЯ ЗАДАЧИ
 // ====================
-
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const title = inputTitle.value.trim();
   const dateInput = inputDate.value.trim();
 
-  if (title === "") {
-    alert("Пожалуйста, введите название задачи!");
-    return;
-  }
-
-  if (dateInput !== "" && !isValidDisplayDate(dateInput)) {
-    alert("Некорректная дата! Используйте формат: ДД.ММ.ГГГГ (например: 05.12.2025)");
-    return;
-  }
+  if (title === "") return;
+  if (dateInput !== "" && !isValidDisplayDate(dateInput)) return;
 
   tasks.push({
     id: generateId(),
@@ -311,16 +301,12 @@ form.addEventListener("submit", (e) => {
 // ====================
 // ФИЛЬТРАЦИЯ, СОРТИРОВКА И ПОИСК
 // ====================
-
 filterSelect.addEventListener("change", () => {
   const filter = filterSelect.value;
   let filtered = [...tasks];
 
-  if (filter === "Выполненные") {
-    filtered = filtered.filter(t => t.completed);
-  } else if (filter === "Невыполненные") {
-    filtered = filtered.filter(t => !t.completed);
-  }
+  if (filter === "Выполненные") filtered = filtered.filter(t => t.completed);
+  else if (filter === "Невыполненные") filtered = filtered.filter(t => !t.completed);
 
   renderTasks(filtered);
 });
@@ -345,6 +331,5 @@ searchInput.addEventListener("input", () => {
 // ====================
 // ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
 // ====================
-
 loadTasks(); // загрузка из LocalStorage
 renderTasks(); // отображение
