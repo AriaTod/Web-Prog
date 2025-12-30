@@ -1,92 +1,102 @@
 'use strict';
 
-// Элементы
-const citiesList = document.getElementById('cities-list');
+// DOM
 const cityForm = document.getElementById('city-form');
 const cityInput = document.getElementById('city-input');
 const cityError = document.getElementById('city-error');
 const suggestionsList = document.getElementById('city-suggestions');
+const citiesContainer = document.getElementById('cities-cards');
 
-// Для основной локации
-const locationSection = document.getElementById('current-location');
-const locationTitle = locationSection.querySelector('h2');
-const forecastContainer = document.querySelector('#forecast .forecast-list');
+const mainLocationTitle = document.querySelector('#current-location h2');
+const mainForecastContainer = document.querySelector('#forecast');
 
-// Хранилища
-let currentLocation = null; // null — если ещё не установлена основная
-const addedCities = []; // имена в lowerCase для проверки дубликатов
+let mainLocation = null; // основной город
+const addedCities = new Set();
 
 /**
- * Отрисовка прогноза в указанный контейнер
+ * Отрисовка прогноза в любой контейнер
  */
-function renderForecastTo(container, forecastDays) {
-  while (container.firstChild) {
-    container.removeChild(container.firstChild);
-  }
+function renderForecast(container, forecastDays) {
+  container.innerHTML = '';
 
   forecastDays.forEach((day, index) => {
-    const dayElement = document.createElement('div');
-    dayElement.classList.add('forecast-day');
+    const dayEl = document.createElement('div');
+    dayEl.classList.add('forecast-day');
 
     const dateText = index === 0 ? 'Сегодня' : index === 1 ? 'Завтра' : 'Послезавтра';
-
     const date = createElement('p', dateText, ['date']);
     const temp = createElement('p', `${Math.round(day.day.avgtemp_c)} °C`, ['temp']);
     const condition = createElement('p', day.day.condition.text, ['condition']);
 
-    dayElement.append(date, temp, condition);
-    container.appendChild(dayElement);
+    dayEl.append(date, temp, condition);
+    container.appendChild(dayEl);
   });
 }
 
 /**
- * Добавление города (основного или дополнительного)
+ * Добавление города
+ * @param {string} cityName
+ * @param {boolean} isMain
  */
-async function addCity(cityName) {
-  if (!cityName.trim()) {
+async function addCity(cityName, isMain = false) {
+  const trimmed = cityName.trim();
+  if (!trimmed) {
     cityError.textContent = 'Введите название города';
     showElement(cityError);
     return;
   }
 
-  const normalizedName = cityName.toLowerCase();
+  const normalized = trimmed.toLowerCase();
 
-  // Проверка дубликатов
-  if (addedCities.includes(normalizedName) || (currentLocation && currentLocation.name.toLowerCase() === normalizedName)) {
+  if (addedCities.has(normalized) || (mainLocation && mainLocation.normalized === normalized)) {
     cityError.textContent = 'Город уже добавлен';
     showElement(cityError);
     return;
   }
 
   hideElement(cityError);
+  cityInput.disabled = true;
 
   try {
-    const data = await getForecast(cityName);
-
+    const data = await getForecast(trimmed);
     const fullName = `${data.location.name}, ${data.location.country}`;
+    const normalizedName = data.location.name.toLowerCase();
 
-    // Если основной локации ещё нет — делаем этот город основным
-    if (!currentLocation) {
-      currentLocation = { name: data.location.name, country: data.location.country };
-      locationTitle.textContent = fullName;
-      showElement(locationSection);
-      showElement(document.getElementById('forecast'));
-      renderForecastTo(forecastContainer, data.forecast.forecastday);
+    if (isMain || !mainLocation) {
+      mainLocation = {
+        name: data.location.name,
+        country: data.location.country,
+        normalized: normalizedName,
+        forecast: data.forecast.forecastday
+      };
+
+      mainLocationTitle.textContent = fullName;
+      renderForecast(mainForecastContainer, mainLocation.forecast);
     } else {
-      // Иначе — добавляем как дополнительный
-      addedCities.push(normalizedName);
+      addedCities.add(normalizedName);
 
-      const li = document.createElement('li');
-      li.classList.add('city-block');
+      const card = document.createElement('div');
+      card.classList.add('city-card');
+
+      const header = document.createElement('div');
+      header.classList.add('added-city-header');
 
       const title = createElement('h4', fullName);
+      const deleteBtn = createElement('button', 'Удалить');
+      deleteBtn.classList.add('delete-city-btn');
+      deleteBtn.onclick = () => {
+        card.remove();
+        addedCities.delete(normalizedName);
+      };
+
+      header.append(title, deleteBtn);
+
       const forecastDiv = document.createElement('div');
       forecastDiv.classList.add('forecast-list');
+      renderForecast(forecastDiv, data.forecast.forecastday);
 
-      renderForecastTo(forecastDiv, data.forecast.forecastday);
-
-      li.append(title, forecastDiv);
-      citiesList.appendChild(li);
+      card.append(header, forecastDiv);
+      citiesContainer.appendChild(card);
     }
 
     cityInput.value = '';
@@ -95,18 +105,19 @@ async function addCity(cityName) {
   } catch (err) {
     cityError.textContent = 'Город не найден';
     showElement(cityError);
+  } finally {
+    cityInput.disabled = false;
+    cityInput.focus();
   }
 }
 
-/* Автодополнение (выпадающий список) */
-
+/* Автодополнение */
 let debounceTimer;
 
 cityInput.addEventListener('input', () => {
   clearTimeout(debounceTimer);
   const query = cityInput.value.trim();
 
-  // Очищаем старые подсказки
   suggestionsList.innerHTML = '';
   hideElement(suggestionsList);
 
@@ -115,9 +126,9 @@ cityInput.addEventListener('input', () => {
   debounceTimer = setTimeout(async () => {
     try {
       const results = await searchCity(query);
-      if (results.length === 0) return;
+      if (!results.length) return;
 
-      results.slice(0, 5).forEach(item => {
+      results.slice(0, 6).forEach(item => {
         const li = document.createElement('li');
         li.textContent = `${item.name}, ${item.country}`;
         li.style.cursor = 'pointer';
@@ -130,21 +141,15 @@ cityInput.addEventListener('input', () => {
       });
 
       showElement(suggestionsList);
-    } catch (err) {
-      // Тихо игнорируем ошибки поиска
-    }
+    } catch {}
   }, 300);
 });
 
-// Клик вне списка — скрыть
 document.addEventListener('click', (e) => {
-  if (!cityForm.contains(e.target)) {
-    hideElement(suggestionsList);
-  }
+  if (!cityForm.contains(e.target)) hideElement(suggestionsList);
 });
 
-// Обработка submit формы
 cityForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  addCity(cityInput.value.trim());
+  addCity(cityInput.value);
 });
