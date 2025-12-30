@@ -1,1 +1,5 @@
-'use strict'; // точка входа приложения -> далее будет добавлена логика
+'use strict'; // точка входа приложения 
+
+// Проверка готовности DOM
+document.addEventListener('DOMContentLoaded', function () {
+});
