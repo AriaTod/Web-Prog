@@ -79,7 +79,7 @@ async function addCity(cityName) {
 }
 
 /**
- * Создание карточки города (выделено в отдельную функцию для переиспользования)
+ * Создание карточки города
  */
 function createCityCard(fullName, normalized, forecastDays) {
   const card = document.createElement('div');
@@ -215,8 +215,24 @@ cityForm.addEventListener('submit', (e) => {
   addCity(cityInput.value.trim());
 });
 
-// Кнопка обновить
+// Кнопка "Обновить погоду"
 document.getElementById('refresh-btn').addEventListener('click', refreshAll);
+
+// Кнопка "Начать заново"
+document.getElementById('reset-btn').addEventListener('click', () => {
+  const confirmation = confirm(
+    'Начать заново?\n\n' +
+    '• Все добавленные города будут удалены\n' +
+    '• При перезагрузке страницы браузер снова запросит доступ к геолокации\n' +
+    '• Это как первое открытие приложения'
+  );
+
+  if (confirmation) {
+    localStorage.removeItem('mainLocation');
+    localStorage.removeItem('addedCities');
+    location.reload();
+  }
+});
 
 // Экспортируем для app.js
 window.loadFromLocalStorage = loadFromLocalStorage;

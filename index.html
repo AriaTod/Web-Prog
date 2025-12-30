@@ -17,7 +17,7 @@
       <p id="error" hidden>Произошла ошибка при получении данных</p>
     </section>
 
-    <!-- Форма добавления города + кнопка "Обновить" -->
+    <!-- Форма добавления города + кнопки -->
     <section id="city-form-section">
       <h3>Добавить город</h3>
 
@@ -38,10 +38,15 @@
         <button type="submit">Добавить</button>
       </form>
 
-      <!-- ОБЯЗАТЕЛЬНАЯ ПО ТЗ КНОПКА "ОБНОВИТЬ" -->
-      <button type="button" id="refresh-btn">
-        Обновить погоду
-      </button>
+      <!-- Группа кнопок: Обновить и Начать заново -->
+      <div class="buttons-group">
+        <button type="button" id="refresh-btn">
+          Обновить погоду
+        </button>
+        <button type="button" id="reset-btn">
+          Начать заново
+        </button>
+      </div>
     </section>
 
     <!-- Блок основной локации (геолокация или первый введённый город) -->
@@ -50,7 +55,7 @@
       <div class="forecast-list" id="main-forecast"></div>
     </section>
 
-    <!-- Список добавленных городов (минимум 2 дополнительных) -->
+    <!-- Список добавленных городов -->
     <section id="cities-list-section">
       <h3>Добавленные города</h3>
 
