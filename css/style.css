@@ -47,6 +47,34 @@ section {
   padding: 4px 0;
 }
 
+#city-suggestions {
+  list-style: none;
+  padding: 8px 0;
+  margin: 4px 0 0 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  max-width: 300px;
+  z-index: 10;
+}
+
+#city-suggestions li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+#city-suggestions li:hover {
+  background: #f0f0f0;
+}
+
+#city-form {
+  position: relative; /* для позиционирования suggestions */
+}
+
 @media (max-width: 768px) {
   .forecast-list {
     flex-direction: column;
