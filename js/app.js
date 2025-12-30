@@ -1,6 +1,9 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', function () {
+  const locationSection = document.getElementById('current-location');
+  const locationTitle = locationSection.querySelector('h2');
+  const forecastSection = document.getElementById('forecast');
   const loadingElement = document.getElementById('loading');
   const errorElement = document.getElementById('error');
   const cityFormSection = document.getElementById('city-form-section');
@@ -17,9 +20,11 @@ document.addEventListener('DOMContentLoaded', function () {
         hideElement(loadingElement);
         hideElement(errorElement);
 
-        // Добавляем основную локацию
-        addCity(data.location.name, true); // true = основной город
+        showElement(locationSection);
+        showElement(forecastSection);
 
+        // Передаем текущий город в cities.js как основной
+        addCity(data.location.name);
       } catch (err) {
         hideElement(loadingElement);
         errorElement.textContent = 'Не удалось загрузить данные о погоде по вашему местоположению';
@@ -27,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Ошибка при запросе погоды:', err);
       }
     },
-
     function (geoErrorMessage) {
       hideElement(loadingElement);
       errorElement.textContent = geoErrorMessage;
