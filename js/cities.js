@@ -220,19 +220,14 @@ document.getElementById('refresh-btn').addEventListener('click', refreshAll);
 
 // Кнопка "Начать заново"
 document.getElementById('reset-btn').addEventListener('click', () => {
-  const confirmation = confirm(
-    'Начать заново?\n\n' +
-    '• Все добавленные города будут удалены\n' +
-    '• При перезагрузке страницы браузер снова запросит доступ к геолокации\n' +
-    '• Это как первое открытие приложения'
-  );
+  // Сбрасываем сохраненные данные приложения
+  localStorage.removeItem('mainLocation');
+  localStorage.removeItem('addedCities');
 
-  if (confirmation) {
-    localStorage.removeItem('mainLocation');
-    localStorage.removeItem('addedCities');
-    location.reload();
-  }
+  // Перезагружаем страницу
+  location.reload();
 });
+
 
 // Экспортируем для app.js
 window.loadFromLocalStorage = loadFromLocalStorage;
