@@ -1,0 +1,142 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 16px;
+}
+
+section {
+  margin-bottom: 24px;
+}
+
+.forecast-list {
+  display: flex;
+  gap: 12px;
+}
+
+.forecast-day {
+  border: 1px solid #ccc;
+  padding: 8px;
+  min-width: 100px;
+}
+
+#city-form input {
+  display: block;
+  margin-bottom: 8px;
+  width: 100%;
+  max-width: 300px;
+}
+
+#city-form button {
+  margin-top: 8px;
+}
+
+#cities-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.city-card {
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: white;
+  min-width: 280px;
+  flex: 1;
+}
+
+.city-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.delete-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.delete-btn:hover {
+  background: #d32f2f;
+}
+
+#city-suggestions {
+  list-style: none;
+  padding: 8px 0;
+  margin: 4px 0 0 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  max-width: 300px;
+  z-index: 10;
+}
+
+#city-suggestions li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+#city-suggestions li:hover {
+  background: #f0f0f0;
+}
+
+#city-form {
+  position: relative; /* для позиционирования suggestions */
+}
+
+.buttons-group {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.buttons-group button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#refresh-btn {
+  background: #2196F3;
+  color: white;
+}
+
+#refresh-btn:hover {
+  background: #1976D2;
+}
+
+#reset-btn {
+  background: #795548;
+  color: white;
+}
+
+#reset-btn:hover {
+  background: #5d4037;
+}
+
+@media (max-width: 768px) {
+  .forecast-list {
+    flex-direction: column;
+  }
+  #cities-list {
+    flex-direction: column;
+  }
+  .city-card {
+    min-width: auto;
+  }
+}
